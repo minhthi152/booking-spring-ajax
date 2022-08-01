@@ -1,0 +1,82 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="frm_update">
+  <div id="updateModal" class="modal fade exampleModal hide" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add new</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="formUpdateApt">
+          <div class="modal-body">
+            <div class="modal-alert-danger hide"></div>
+            <div class="form-group">
+              <label for="apt-titleUp">Title</label>
+              <input type="text" class="form-control" id="apt-titleUp">
+            </div>
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="apt-typeUp">Type</label>
+                  <select id="apt-typeUp" class="form-control">
+                    <option selected="">Choose...</option>
+                    <option>...</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="apt-areaUp">Area</label>
+                  <input type="number" class="form-control" id="apt-areaUp">
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="apt-priceUp">Price</label>
+                  <input type="number" class="form-control" id="apt-priceUp">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <div>
+                <textarea required="" id="apt-descUp" class="form-control" rows="4"></textarea>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="custom-control custom-checkbox custom-checkbox-info mb-3">
+                  <input type="checkbox" class="custom-control-input" id="kitchenCbUp" name="kitchenCbUp">
+                  <label class="custom-control-label" for="kitchenCbUp">Kitchen</label>
+                </div>
+                <div class="custom-control custom-checkbox  custom-checkbox-warning mb-3">
+                  <input type="checkbox" class="custom-control-input" id="balconyCbUp" name="balconyCbUp">
+                  <label class="custom-control-label" for="balconyCbUp">Balcony</label>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="custom-control custom-checkbox custom-checkbox-primary mb-3">
+                  <input type="checkbox" class="custom-control-input" id="viewCbUp" name="viewCbUp">
+                  <label class="custom-control-label" for="viewCbUp">View</label>
+                </div>
+                <div class="custom-control custom-checkbox  custom-checkbox-success mb-3">
+                  <input type="checkbox" class="custom-control-input" id="petCbUp" name="petCbUp">
+                  <label class="custom-control-label" for="petCbUp">Pet allowed</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success btn-update-apt" id="btn-update-apt">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</th:block>

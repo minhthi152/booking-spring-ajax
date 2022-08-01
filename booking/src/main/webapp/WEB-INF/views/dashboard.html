@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dashboard | Thi </title>
+    <th:block th:replace="/layout/dashboard-css-links:: css-link" />
+
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+    <script type="text/javascript" src="/assets/js/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body data-sidebar="dark">
+
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+    <!--    top bar-->
+    <th:block th:replace="/layout/top-bar:: top-bar" />
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="vertical-menu">
+
+        <div data-simplebar="" class="h-100">
+
+            <!--- Sidemenu -->
+            <th:block th:replace="/layout/side-bar-menu:: side-bar-menu" />
+            <!-- Sidebar -->
+        </div>
+    </div>
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content">
+
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-flex align-items-center justify-content-between">
+                            <h4 class="mb-0 font-size-18">Dashboard</h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mt-3">
+                                    <div class="col-lg-2">
+                                        <h4 class="card-title mb-4">List of properties</h4>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button type="button" id="btn-add-apt" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" data-toggle="modal" data-target="#createAptModal">
+                                            Add new
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-8">
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-centered table-nowrap mb-0" id="tbListApartment">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th style="width: 20px;">
+                                            </th>
+                                            <th>ID</th>
+                                            <th>Title</th>
+                                            <th>Type</th>
+                                            <th>Area</th>
+                                            <th>Price</th>
+                                            <th>Description</th>
+                                            <th colspan="2" class="text-center">View</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+<!--                                        <tr>-->
+<!--                                            <td>-->
+<!--                                                <span class="select-tab unselected"></span>-->
+<!--                                            </td>-->
+<!--                                            <td> 1</td>-->
+<!--                                            <td>Barry Dick</td>-->
+<!--                                            <td>-->
+<!--                                                05 Oct, 2019-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                $412-->
+<!--                                            </td>-->
+<!--                                            <td></td>-->
+<!--                                            <td></td>-->
+<!--                                            <td>-->
+<!--                                                &lt;!&ndash; Button trigger modal &ndash;&gt;-->
+<!--                                                <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" data-toggle="modal" data-target=".exampleModal">-->
+<!--                                                    View Details-->
+<!--                                                </button>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- container-fluid -->
+        </div>
+        <!-- End Page-content -->
+
+        <th:block th:replace="/layout/footer:: footer" />
+
+    </div>
+    <!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+<th:block th:replace="/create:: frm_create" />
+<th:block th:replace="/update:: frm_update" />
+<th:block th:replace="/layout/tempRow:: add_row_apartment" />
+<th:block th:replace="/layout/dashboard-script:: script" />
+
+
+<script type="text/javascript" src="/assets/js/jquery.validate-1.19.3.min.js"></script>
+
+<script type="text/javascript" src="/assets/js/sweetalert2.min.js"></script>
+<script type="text/javascript" src="/assets/js/iziToast-1.4.0.js"></script>
+<script type="text/javascript" src="/assets/js/app.js"></script>
+
+<script>
+
+    let apartmentTypeDTO = new ApartmentTypeDTO();
+    let apartment = new Apartment();
+
+
+    let page = {
+        urls: {
+            getAllApartment : App.BASE_URL_APARTMENT,
+            createApartment : App.BASE_URL_NEW_APARTMENT,
+            getAllApartmentType: App.BASE_URL_APARTMENT_TYPE,
+            updateApartment: App.BASE_URL_APARTMENT + "/update",
+            deleteApartment: App.BASE_URL_APARTMENT + "/delete"
+
+        },
+        element: {},
+        commands: {},
+    }
+
+    let rowApartment = $.validator.format($.trim($('#rowApartment').val().toString()));
+
+    function addRowApartment(){
+        $('#tbListApartment tbody').prepend($(rowApartment(apartment.id, apartment.title, apartmentTypeDTO.name, apartment.area, apartment.price, apartment.description)));
+    }
+
+    function replaceRowApartment(){
+        $('#tbListApartment tbody #tr_' + apartment.id).replaceWith($(rowApartment(apartment.id, apartment.title, apartmentTypeDTO.name, apartment.area, apartment.price, apartment.description)));
+    }
+
+    function unbindAll(){
+        $('.update').off();
+
+    }
+
+
+    $('#btn-add-apt').on('click', () => {
+        $('#formCreateApt .modal-alert-danger').html('').removeClass('show').addClass('hide');
+        $('#apt-title').val("");
+        $('#apt-price').val("");
+        $('#apt-area').val("");
+        $('#apt-desc').val("");
+
+        $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "GET",
+                "url": page.urls.getAllApartmentType,
+            })
+                .done((data) => {
+                    $('#apt-type').html("");
+                    $.each(data, (i, item) => {
+                        apartmentType = item;
+                        let str = `<option value="${apartmentType.id}">${apartmentType.name}</option>`;
+
+                        $('#apt-type').prepend(str);
+                    })
+                })
+                .fail((jqXHR) => {
+                    alert("fail")
+                    console.log(jqXHR);
+                })
+        // $('#createAptModal').modal('show');
+    })
+
+
+    $('#btn-create-apt').on('click', () => {
+        $('#formCreateApt .modal-alert-danger').html('').removeClass('show').addClass('hide');
+        delete apartment.id;
+
+        apartment.apartmentTypeDTO.name =$('#apt-type option:selected').text()
+        apartment.apartmentTypeDTO.id = $('#apt-type').val();
+
+        apartment.title = $('#apt-title').val();
+        apartment.apartmentTypeDTO = apartmentTypeDTO;
+        apartment.price = $('#apt-price').val();
+        apartment.area = $('#apt-area').val();
+        apartment.description = $('#apt-desc').val();
+
+        if($('#kitchenCb').is(":checked")) {
+            apartment.kitchen = true;
+        }else{
+            apartment.kitchen = false;
+        }
+
+        if($('#balconyCb').is(":checked")) {
+            apartment.balcony = true;
+        }else{
+            apartment.balcony = false;
+        }
+
+        if($('#viewCb').is(":checked")) {
+            apartment.view = true;
+        }else{
+            apartment.view = false;
+        }
+
+        if($('#petCb').is(":checked")) {
+            apartment.petAllowed = true;
+        }else{
+            apartment.petAllowed = false;
+        }
+
+        console.log("Apartment info: " + JSON.stringify(apartment));
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "POST",
+            "url": page.urls.createApartment,
+            "data": JSON.stringify(apartment)
+        })
+            .done((data) => {
+                apartment = data;
+                apartmentTypeDTO = apartment.apartmentTypeDTO;
+                console.log(apartment);
+
+                addRowApartment();
+                unbindAll();
+                handleShowUpdate();
+                handleShowDelete();
+                App.IziToast.showSuccessAlert("Create successfully!");
+                setTimeout(function () {
+                    $('#createAptModal').modal("hide");
+                }, 1500);
+
+            })
+            .fail((jqXHR) => {
+                $('#formCreateApt .modal-alert-danger').html('').removeClass('hide').addClass('show');
+                console.log(jqXHR);
+                if (jqXHR.responseJSON) {
+                    $.each(jqXHR.responseJSON, (key, item) => {
+                        let str = `<label id="${key}-error" class="input-error" for="${key}">${item}</label>`;
+                        $("#" + key).addClass("input-error");
+
+                        $('#formCreateApt .modal-alert-danger').append(str);
+                    })
+                }
+            })
+    })
+
+    function loadApartments() {
+        $.ajax({
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            type: "GET",
+            url: page.urls.getAllApartment
+        })
+            .done((data) => {
+                $('#tbListApartment tbody').html('');
+
+                $.each(data, (i, item) => {
+                    apartment = item;
+                    apartmentTypeDTO = apartment.apartmentTypeDTO;
+                    addRowApartment();
+                })
+                handleShowUpdate();
+                handleShowDelete()
+            })
+    }
+    loadApartments();
+
+
+//    ============================= UPDATE ===================================
+    function handleShowUpdate(){
+        $('.update').on('click', function(){
+            $('#formUpdateApt .modal-alert-danger').html('').removeClass('show').addClass('hide');
+
+            $('#kitchenCbUp').prop('checked', false);
+            $('#balconyCbUp').prop('checked', false);
+            $('#viewCbUp').prop('checked', false);
+            $('#petCbUp').prop('checked', false);
+            let apartmentId = this.id.replace("btnUpdate_", "");
+
+            $.ajax({
+                headers: {
+                    "Content-Type": "Application/json",
+                    "Accept": "Application/json"
+                },
+                type: "GET",
+                url: page.urls.updateApartment + "/" + apartmentId
+            })
+                .done((data) => {
+                    apartment = data;
+                    console.log(apartment);
+
+                    $('#apt-titleUp').val(apartment.title);
+                    $('#apt-typeUp option:selected').val(apartment.apartmentTypeDTO.id);
+                    $('#apt-priceUp').val(apartment.price);
+                    $('#apt-areaUp').val(apartment.area);
+                    $('#apt-descUp').val(apartment.description);
+
+                    if(apartment.kitchen){
+                        $('#kitchenCbUp').prop('checked', true);
+                    }
+                    if(apartment.balcony){
+                        $('#balconyCbUp').prop('checked', true);
+                    }
+                    if(apartment.view){
+                        $('#viewCbUp').prop('checked', true);
+                    }
+                    if(apartment.petAllowed){
+                        $('#petCbUp').prop('checked', true);
+                    }
+
+                    $.ajax({
+                        "headers": {
+                            "accept": "application/json",
+                            "content-type": "application/json"
+                        },
+                        "type": "GET",
+                        "url": page.urls.getAllApartmentType,
+                    })
+                        .done((data) => {
+                            $('#apt-typeUp').html("");
+                            let str;
+                            $.each(data, (i, item) => {
+                                apartmentType = item;
+                                if(apartment.apartmentTypeDTO.id === apartmentType.id ){
+                                    str = `<option value="${apartmentType.id}" selected>${apartmentType.name}</option>`
+                                }
+                                else{
+                                    str = `<option value="${apartmentType.id}">${apartmentType.name}</option>`;
+                                }
+                                $('#apt-typeUp').prepend(str);
+                            })
+                        })
+                        .fail((jqXHR) => {
+                            alert("fail")
+                            console.log(jqXHR);
+                        })
+
+                })
+
+
+            $('#updateModal').modal('show');
+        })
+    }
+
+    $('#btn-update-apt').on('click', () => {
+        $('#formUpdateApt .modal-alert-danger').html('').removeClass('show').addClass('hide');
+
+        apartmentTypeDTO.name =$('#apt-typeUp option:selected').text()
+        apartmentTypeDTO.id = $('#apt-typeUp').val();
+        apartment.apartmentTypeDTO = apartmentTypeDTO;
+
+
+        apartment.title = $('#apt-titleUp').val();
+        apartment.price = $('#apt-priceUp').val();
+        apartment.area = $('#apt-areaUp').val();
+        apartment.description = $('#apt-descUp').val();
+
+        if($('#kitchenCbUp').is(":checked")) {
+            apartment.kitchen = true;
+        }else{
+            apartment.kitchen = false;
+        }
+
+        if($('#balconyCbUp').is(":checked")) {
+            apartment.balcony = true;
+        }else{
+            apartment.balcony = false;
+        }
+
+        if($('#viewCbUp').is(":checked")) {
+            apartment.view = true;
+        }else{
+            apartment.view = false;
+        }
+
+        if($('#petCbUp').is(":checked")) {
+            apartment.petAllowed = true;
+        }else{
+            apartment.petAllowed = false;
+        }
+
+        console.log(apartment);
+
+        $.ajax({
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            type: "PUT",
+            url: page.urls.updateApartment,
+            "data": JSON.stringify(apartment)
+        })
+            .done((data) => {
+                apartment = data;
+                apartmentTypeDTO = apartment.apartmentTypeDTO;
+                console.log(apartment);
+                console.log(apartmentTypeDTO);
+
+                replaceRowApartment();
+
+                App.IziToast.showSuccessAlert("Update successfully!");
+                setTimeout(function () {
+                    $('#updateModal').modal("hide");
+                }, 1500);
+                unbindAll();
+                handleShowUpdate();
+                handleShowDelete();
+
+            })
+            .fail((jqXHR) => {
+                $('#formUpdateApt .modal-alert-danger').html('').removeClass('hide').addClass('show');
+                if (jqXHR.responseJSON) {
+                    $.each(jqXHR.responseJSON, (key, item) => {
+                        let str = `<label id="${key}-error" class="input-error" for="${key}">${item}</label>`;
+                        $("#" + key).addClass("input-error");
+
+                        $('#formUpdateApt .modal-alert-danger').append(str);
+                    })
+                }
+            })
+
+    })
+
+//    ================================== DELETE ============================================
+     function handleShowDelete(){
+         $('.delete').on('click', function(){
+             console.log('delete');
+             let id = this.id.replace("btnDelete_", "");
+             console.log(id);
+
+             App.showConfirmDelete()
+                 .then((result) => {
+                     if (result.isConfirmed) {
+                         doDelete(id)
+                     }
+                 })
+
+         })
+     }
+
+     function doDelete(id){
+         $.ajax({
+             headers: {
+                 "Content-Type": "Application/json",
+                 "Accept": "Application/json"
+             },
+             type: "DELETE",
+             url: page.urls.deleteApartment + "/" + id,
+             data: JSON.stringify(apartment)
+         })
+             .done((data) => {
+
+                 console.log(data);
+
+                 $('#tr_' + id).remove();
+                 App.showSuccessAlert('The apartment has been deleted.');
+             })
+             .fail((error) => {
+                 App.showErrorAlert('Deleted apartment fail.');
+             });
+
+     }
+
+
+</script>
+</body>
+
+</html>

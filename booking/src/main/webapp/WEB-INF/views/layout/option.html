@@ -1,0 +1,15 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="option">
+    <textarea id="tempOption" class="hide">
+        <button type="button" class="btn btn-secondary update" title="Edit" data-toggle="tooltip">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-success deposit" title="Deposit" data-toggle="tooltip">
+            <i class="fas fa-trash"></i>
+        </button>
+        <button type="button" class="btn btn-danger suspended" title="Suspended" data-toggle="tooltip">
+            <i class="fa fa-ban" aria-hidden="true"></i>
+            Delete
+        </button>
+    </textarea>
+</th:block>
