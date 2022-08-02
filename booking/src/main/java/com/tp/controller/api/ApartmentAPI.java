@@ -36,7 +36,7 @@ public class ApartmentAPI {
     @GetMapping
     public ResponseEntity<List<?>> findAll() {
 
-        List<ApartmentDTO> Apartments = apartmentService.findAllApartmentDTOByAvailableIsFalse();
+        List<ApartmentDTO> Apartments = apartmentService.findAllApartmentDTOByDeletedIsFalse();
 
         if (Apartments.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -103,7 +103,7 @@ public class ApartmentAPI {
 
         if (apartment.isPresent()) {
             try {
-                apartment.get().setAvailable(true);
+                apartment.get().setDeleted(true);
                 apartmentService.save(apartment.get());
 
                 return new ResponseEntity<>(HttpStatus.ACCEPTED);

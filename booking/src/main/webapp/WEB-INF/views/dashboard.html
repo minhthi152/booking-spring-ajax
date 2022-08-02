@@ -460,7 +460,6 @@
 //    ================================== DELETE ============================================
      function handleShowDelete(){
          $('.delete').on('click', function(){
-             console.log('delete');
              let id = this.id.replace("btnDelete_", "");
              console.log(id);
 
@@ -485,8 +484,6 @@
              data: JSON.stringify(apartment)
          })
              .done((data) => {
-
-                 console.log(data);
 
                  $('#tr_' + id).remove();
                  App.showSuccessAlert('The apartment has been deleted.');

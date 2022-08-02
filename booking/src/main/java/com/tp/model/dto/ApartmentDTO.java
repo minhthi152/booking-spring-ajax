@@ -47,6 +47,8 @@ public class ApartmentDTO implements Validator {
 
     private boolean petAllowed;
 
+    private boolean deleted;
+
     public ApartmentDTO(long id, String title, ApartmentType apartmentType, String area, BigDecimal price, String description) {
         this.id = id;
         this.title = title;
@@ -56,7 +58,7 @@ public class ApartmentDTO implements Validator {
         this.description = description;
     }
 
-    public ApartmentDTO(long id, String title, ApartmentType apartmentType, String area, BigDecimal price, String description, boolean kitchen, boolean balcony, boolean view, boolean petAllowed) {
+    public ApartmentDTO(long id, String title, ApartmentType apartmentType, String area, BigDecimal price, String description, boolean kitchen, boolean balcony, boolean view, boolean petAllowed, boolean deleted) {
         this.id = id;
         this.title = title;
         this.apartmentTypeDTO = apartmentType.toApartmentTypeDTO();
@@ -67,6 +69,7 @@ public class ApartmentDTO implements Validator {
         this.balcony = balcony;
         this.view = view;
         this.petAllowed = petAllowed;
+        this.deleted = deleted;
     }
 
     public Apartment toApartment(){
@@ -80,7 +83,8 @@ public class ApartmentDTO implements Validator {
                 .setKitchen(kitchen)
                 .setBalcony(balcony)
                 .setView(view)
-                .setPetAllowed(petAllowed);
+                .setPetAllowed(petAllowed)
+                .setDeleted(deleted);
     }
 
     @Override

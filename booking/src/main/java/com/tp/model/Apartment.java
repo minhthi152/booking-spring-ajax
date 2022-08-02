@@ -34,7 +34,7 @@ public class Apartment {
     @Digits(integer = 12, fraction = 0)
     private BigDecimal price;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default true")
     private boolean available;
 
     private String description;
@@ -51,6 +51,9 @@ public class Apartment {
     @Column(columnDefinition = "boolean default false")
     private boolean petAllowed;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean deleted;
+
     public ApartmentDTO toApartmentDTO(){
         return new ApartmentDTO()
                 .setId(id)
@@ -62,7 +65,8 @@ public class Apartment {
                 .setKitchen(kitchen)
                 .setBalcony(balcony)
                 .setView(view)
-                .setPetAllowed(petAllowed);
+                .setPetAllowed(petAllowed)
+                .setDeleted(deleted);
     }
 
 }

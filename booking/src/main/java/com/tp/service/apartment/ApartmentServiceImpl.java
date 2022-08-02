@@ -31,8 +31,8 @@ public class ApartmentServiceImpl implements IApartmentService{
     }
 
 
-    public List<ApartmentDTO> findAllApartmentDTOByAvailableIsFalse(){
-        return apartmentRepository.findAllApartmentDTOByAvailableIsFalse();
+    public List<ApartmentDTO> findAllApartmentDTOByDeletedIsFalse(){
+        return apartmentRepository.findAllApartmentDTOByDeletedIsFalse();
     }
 
     public Optional<ApartmentDTO> findApartmentDTOById(Long id){
