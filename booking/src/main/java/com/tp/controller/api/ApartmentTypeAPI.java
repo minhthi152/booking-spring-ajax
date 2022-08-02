@@ -26,4 +26,6 @@ public class ApartmentTypeAPI {
 
         return new ResponseEntity<>(apartmentTypes, HttpStatus.OK);
     }
+
+
 }

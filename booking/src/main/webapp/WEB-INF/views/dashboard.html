@@ -60,8 +60,25 @@
                                             Add new
                                         </button>
                                     </div>
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-4">
                                     </div>
+
+                                    <div class="col-lg-3">
+                                        <form class="app-search d-none d-lg-block">
+                                            <div class="position-relative" id="div-search">
+                                                <input type="text" class="form-control" id="input-search" placeholder="...">
+                                                <span class="bx bx-search-alt"></span>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="col-lg-1">
+                                        <button type="button" id="btn-search" class="btn btn-warning btn-sm btn-rounded waves-effect waves-light">
+                                        Search
+                                        </button>
+                                    </div>
+
+
                                 </div>
 
                                 <div class="table-responsive">
@@ -147,7 +164,8 @@
             createApartment : App.BASE_URL_NEW_APARTMENT,
             getAllApartmentType: App.BASE_URL_APARTMENT_TYPE,
             updateApartment: App.BASE_URL_APARTMENT + "/update",
-            deleteApartment: App.BASE_URL_APARTMENT + "/delete"
+            deleteApartment: App.BASE_URL_APARTMENT + "/delete",
+            search: App.BASE_URL_APARTMENT + "/search"
 
         },
         element: {},
@@ -267,14 +285,32 @@
             .fail((jqXHR) => {
                 $('#formCreateApt .modal-alert-danger').html('').removeClass('hide').addClass('show');
                 console.log(jqXHR);
-                if (jqXHR.responseJSON) {
-                    $.each(jqXHR.responseJSON, (key, item) => {
-                        let str = `<label id="${key}-error" class="input-error" for="${key}">${item}</label>`;
-                        $("#" + key).addClass("input-error");
 
-                        $('#formCreateApt .modal-alert-danger').append(str);
-                    })
+                let str = ``;
+
+                if (jqXHR.status === 401) {
+                    str += `<label id="message-error" class="input-error" for="message">${App.ERROR_401}</label>`;
+                } else {
+                    if (jqXHR.status === 403) {
+                        str += `<label id="message-error" class="input-error" for="message">${App.ERROR_403}</label>`;
+                    } else {
+                        if (jqXHR.responseJSON) {
+                            if (jqXHR.responseJSON.message) {
+                                str += `<label id="message-error" class="input-error" for="message">${jqXHR.responseJSON.message}</label>`;
+                            } else {
+                                $.each(jqXHR.responseJSON, function (key, value) {
+                                    str += `<label id="${key}-error" class="input-error" for="${key}">${value}</label>`;
+                                    $("#" + key).addClass("input-error");
+                                });
+                            }
+                        } else {
+                            str += `<label id="message-error" class="input-error" for="message">${App.ERROR_500}</label>`;
+                        }
+                    }
                 }
+
+                $('#formCreateApt .modal-alert-danger').append(str);
+
             })
     })
 
@@ -300,6 +336,36 @@
             })
     }
     loadApartments();
+
+
+    //========================= SEARCH ===================================
+    $('#btn-search').on('click', function(){
+        let word = $('#input-search').val();
+        search(word);
+    })
+
+
+    function search(word){
+        $.ajax({
+            headers: {
+                "Content-Type": "Application/json",
+                "Accept": "Application/json"
+            },
+            type: "GET",
+            url: page.urls.search + "/" + word
+        })
+            .done((data) => {
+                $('#tbListApartment tbody').html('');
+
+                $.each(data, (i, item) => {
+                    apartment = item;
+                    apartmentTypeDTO = apartment.apartmentTypeDTO;
+                    addRowApartment();
+                })
+                handleShowUpdate();
+                handleShowDelete()
+            })
+    }
 
 
 //    ============================= UPDATE ===================================

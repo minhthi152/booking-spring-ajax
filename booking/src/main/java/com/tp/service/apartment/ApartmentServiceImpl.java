@@ -76,4 +76,9 @@ public class ApartmentServiceImpl implements IApartmentService{
         return  apartmentRepository.save(apartment);
     }
 
+    @Override
+    public List<ApartmentDTO> searchAllByWord(String word) {
+        return apartmentRepository.search(word);
+    }
+
 }

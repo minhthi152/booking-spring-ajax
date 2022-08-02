@@ -24,7 +24,16 @@ public class ApartmentTypeServiceImpl implements IApartmentTypeService{
 
     public List<ApartmentTypeDTO> findAllApartmentTypeDTO(){
         return apartmentTypeRepository.findAllApartmentTypeDTO();
-    };
+    }
+
+    @Override
+    public Optional<ApartmentTypeDTO> findApartmentTypeDTOById(Long id) {
+        return apartmentTypeRepository.findApartmentTypeDTOById(id);
+    }
+
+    ;
+
+
 
 
     @Override

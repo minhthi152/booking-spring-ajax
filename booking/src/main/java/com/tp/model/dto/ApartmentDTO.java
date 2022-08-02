@@ -23,20 +23,20 @@ public class ApartmentDTO implements Validator {
 
     private long id;
 
-    @NotBlank(message = "Title cannot be blank.")
+    @NotBlank(message = "Title cannot be empty.")
     private String title;
     private ApartmentTypeDTO apartmentTypeDTO;
-    @NotBlank(message = "Area cannot be blank.")
-    @Pattern(regexp = "(^$|[0-9]*$)", message = "Area is only number.")
 
     @Min(value = 5, message = "Area must be greater than 5m2")
+    @NotBlank(message = "Area cannot be empty.")
+    @Pattern(regexp = "(^$|[0-9]*$)", message = "Area is only number.")
     private String area;
 
-    @DecimalMin(value = "1", message = "Price cannot be negative", inclusive = false)
+    @DecimalMin(value = "10", message = "Price is greater than $10", inclusive = false)
     @DecimalMax(value = "100000", message = "Price cannot exceed $100.000", inclusive = false)
     private BigDecimal price;
 
-    @NotBlank(message = "Description cannot be blank.")
+    @NotBlank(message = "Description cannot be empty.")
     private String description;
 
     private boolean kitchen;
@@ -87,20 +87,29 @@ public class ApartmentDTO implements Validator {
                 .setDeleted(deleted);
     }
 
+
     @Override
     public boolean supports(Class<?> aClass) {
-        return false;
+        return ApartmentDTO.class.isAssignableFrom(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
         ApartmentDTO apartmentDTO = (ApartmentDTO) o;
-        BigDecimal price = apartmentDTO.getPrice();
 
-//        if(price.compareTo(BigDecimal.ZERO) <= 0) {
-//            errors.rejectValue("price", "error.price.");
-//        }
+        BigDecimal aptPrice = apartmentDTO.getPrice();
+        String aptArea = apartmentDTO.getArea();
 
+        if (aptPrice != null) {
+            if (!aptPrice.toString().matches("(^$|[0-9]*$)")){
+                errors.rejectValue("price", "price.matches", "Price is only number");
+            }
+        } else {
+            errors.rejectValue("price", "price.null", "Price cannot be empty");
+        }
 
+        if(aptArea == null){
+            errors.rejectValue("area", "area.null", "Area cannot be empty");
+        }
     }
 }

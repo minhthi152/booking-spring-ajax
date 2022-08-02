@@ -4,6 +4,7 @@ import com.tp.exception.DataInputException;
 import com.tp.exception.ResourceNotFoundException;
 import com.tp.model.Apartment;
 import com.tp.model.dto.ApartmentDTO;
+import com.tp.model.dto.ApartmentTypeDTO;
 import com.tp.service.apartment.IApartmentService;
 import com.tp.service.apartmentType.IApartmentTypeService;
 import com.tp.util.AppUtil;
@@ -44,6 +45,17 @@ public class ApartmentAPI {
         return new ResponseEntity<>(Apartments, HttpStatus.OK);
     }
 
+    @GetMapping("/search/{word}")
+    public ResponseEntity<List<?>> searchByWord(@PathVariable String word) {
+
+        List<ApartmentDTO> Apartments = apartmentService.searchAllByWord(word);
+
+        if (Apartments.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(Apartments, HttpStatus.OK);
+    }
+
     @GetMapping("/update/{id}")
     public ResponseEntity<?> showUpdateForm(@PathVariable Long id) {
 
@@ -64,12 +76,19 @@ public class ApartmentAPI {
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody ApartmentDTO apartmentDTO, BindingResult bindingResult){
 
-
+        new ApartmentDTO().validate(apartmentDTO, bindingResult);
         if (bindingResult.hasFieldErrors()){
             return appUtil.mapErrorToResponse(bindingResult);
         }
 
+        Optional<ApartmentTypeDTO> apartmentTypeDTO = apartmentTypeService.findApartmentTypeDTOById(apartmentDTO.getApartmentTypeDTO().getId());
+
+        if(!apartmentTypeDTO.isPresent()){
+            throw new ResourceNotFoundException("Apartment type ID does not exist.");
+        }
+
         apartmentDTO.setId(0);
+
         try {
             Apartment createdApartment = apartmentService.create(apartmentDTO.toApartment());
 
@@ -85,8 +104,14 @@ public class ApartmentAPI {
 
     @PutMapping("/update")
     public ResponseEntity<?> doUpdate(@Validated @RequestBody ApartmentDTO apartmentDTO, BindingResult bindingResult){
+        new ApartmentDTO().validate(apartmentDTO, bindingResult);
         if (bindingResult.hasErrors()){
             return appUtil.mapErrorToResponse(bindingResult);
+        }
+        Optional<ApartmentTypeDTO> apartmentTypeDTO = apartmentTypeService.findApartmentTypeDTOById(apartmentDTO.getApartmentTypeDTO().getId());
+
+        if(!apartmentTypeDTO.isPresent()){
+            throw new ResourceNotFoundException("Apartment type ID does not exist.");
         }
 
         Apartment updatedApartment = apartmentService.update(apartmentDTO.toApartment());
@@ -112,7 +137,7 @@ public class ApartmentAPI {
                 throw new DataInputException("Invalid suspension information");
             }
         } else {
-            throw new DataInputException("Invalid customer information");
+            throw new DataInputException("Invalid apartment information");
         }
     }
 

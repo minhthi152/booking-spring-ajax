@@ -14,6 +14,8 @@ public interface IApartmentService extends IGeneralService<Apartment>{
     
     Apartment create(Apartment apartment);
 
+
+    List<ApartmentDTO> searchAllByWord(String word);
     List<ApartmentDTO> findAllApartmentDTOByDeletedIsFalse();
 
     Optional<ApartmentDTO> findApartmentDTOById(Long id);
