@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    @Query("SELECT NEW com.tp.model.dto.BookingDTO (b.id, b.tenantName, b.tenantEmail, b.tenantPhone, b.bookingItemList) FROM Booking b")
-    List<BookingDTO> findAllBookingDTO();
+//    @Query("SELECT NEW com.tp.model.dto.BookingDTO (b.id, b.tenantName, b.tenantEmail, b.tenantPhone, b.bookingItemList) FROM Booking b")
+//    List<BookingDTO> findAllBookingDTO();
 
 }

@@ -12,8 +12,8 @@ class App {
     static BASE_URL_BOOKING = this.DOMAIN + "/api/booking"
 
     static ERROR_400 = "Please check the data!";
-    static ERROR_401 = "Access Denied! Please log in.";
-    static ERROR_403 = "Access Denied! You are not authorized to perform this function.";
+    static ERROR_401 = "Please log in to perform this function.";
+    static ERROR_403 = "You are not authorized to perform this function.";
     static ERROR_404 = "An error occurred. Please try again later!";
     static ERROR_500 = "Save information fail, please contact administration.";
 

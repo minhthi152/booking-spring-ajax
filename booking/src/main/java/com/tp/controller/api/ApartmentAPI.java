@@ -103,6 +103,7 @@ public class ApartmentAPI {
 
 
     @PutMapping("/update")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<?> doUpdate(@Validated @RequestBody ApartmentDTO apartmentDTO, BindingResult bindingResult){
         new ApartmentDTO().validate(apartmentDTO, bindingResult);
         if (bindingResult.hasErrors()){
@@ -122,7 +123,7 @@ public class ApartmentAPI {
 
 
     @DeleteMapping("/delete/{id}")
-//    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<?> doDelete(@PathVariable Long id) {
         Optional<Apartment> apartment = apartmentService.findById(id);
 

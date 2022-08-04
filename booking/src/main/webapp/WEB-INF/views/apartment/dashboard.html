@@ -515,14 +515,41 @@
             })
             .fail((jqXHR) => {
                 $('#formUpdateApt .modal-alert-danger').html('').removeClass('hide').addClass('show');
-                if (jqXHR.responseJSON) {
-                    $.each(jqXHR.responseJSON, (key, item) => {
-                        let str = `<label id="${key}-error" class="input-error" for="${key}">${item}</label>`;
-                        $("#" + key).addClass("input-error");
 
-                        $('#formUpdateApt .modal-alert-danger').append(str);
-                    })
+                let str = ``;
+
+                if (jqXHR.status === 401) {
+                    str += `<label id="message-error" class="input-error" for="message">${App.ERROR_401}</label>`;
+                } else {
+                    if (jqXHR.status === 403) {
+                        str += `<label id="message-error" class="input-error" for="message">${App.ERROR_403}</label>`;
+                    } else {
+                        if (jqXHR.responseJSON) {
+                            if (jqXHR.responseJSON.message) {
+                                str += `<label id="message-error" class="input-error" for="message">${jqXHR.responseJSON.message}</label>`;
+                            } else {
+                                $.each(jqXHR.responseJSON, function (key, value) {
+                                    str += `<label id="${key}-error" class="input-error" for="${key}">${value}</label>`;
+                                    $("#" + key).addClass("input-error");
+                                });
+                            }
+                        } else {
+                            str += `<label id="message-error" class="input-error" for="message">${App.ERROR_500}</label>`;
+                        }
+                    }
                 }
+
+                $('#formUpdateApt .modal-alert-danger').append(str);
+
+
+                // if (jqXHR.responseJSON) {
+                //     $.each(jqXHR.responseJSON, (key, item) => {
+                //         let str = `<label id="${key}-error" class="input-error" for="${key}">${item}</label>`;
+                //         $("#" + key).addClass("input-error");
+                //
+                //         $('#formUpdateApt .modal-alert-danger').append(str);
+                //     })
+                // }
             })
 
     })
@@ -558,8 +585,16 @@
                  $('#tr_' + id).remove();
                  App.showSuccessAlert('The apartment has been deleted.');
              })
-             .fail((error) => {
-                 App.showErrorAlert('Deleted apartment fail.');
+             .fail((jqXHR) => {
+                 if (jqXHR.status === 401) {
+                     App.showErrorAlert('Please login again to delete.');
+                 } else {
+                     if (jqXHR.status === 403) {
+                         App.showErrorAlert('You do not have the right to delete.');
+                     } else {
+                         App.showErrorAlert('Delete fail.');
+                     }
+                 }
              });
 
      }

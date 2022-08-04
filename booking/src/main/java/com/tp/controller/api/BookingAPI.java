@@ -67,7 +67,7 @@ public class BookingAPI {
             return new ResponseEntity<>(bookingDTO, HttpStatus.CREATED);
 
         } catch (DataIntegrityViolationException e) {
-            throw new DataInputException("Customer creation information is not valid, please check the information again");
+            throw new DataInputException("Booking creation information is not valid, please check the information again");
         }
 
     }
