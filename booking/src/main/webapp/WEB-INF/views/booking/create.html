@@ -1,0 +1,107 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="create">
+    <div id="createBookingModal" class="modal fade exampleModal hide" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add new</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formCreateBooking">
+                    <div class="modal-body">
+                        <div class="modal-alert-danger hide"></div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="tenant-name">Tenant name</label>
+                                    <input type="text" class="form-control" id="tenant-name">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="tenant-email">Tenant email</label>
+                                    <input type="email" class="form-control" id="tenant-email">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="tenant-phone">Tenant phone</label>
+                                    <input type="tel" class="form-control" id="tenant-phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success" id="btn-add-booking-item"><i class="fa fa-plus"></i></button>
+                        </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label for="list_apartment_0">Apartment</label>
+                                        <select id="list_apartment_0" class="form-control list_apartment">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="check-in">Check in</label>
+                                        <input type="date" class="form-control" id="check-in">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="check-out">Check out</label>
+                                        <input type="date" class="form-control" id="check-out">
+                                    </div>
+                                </div>
+                            </div>
+                        <div id="row-booking-item">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Apartment</th>
+                                    <th scope="col">Rental days</th>
+                                    <th scope="col">Price</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">
+                                        <div>
+                                            <h5 class="text-truncate font-size-14">1BR</h5>
+                                        </div>
+                                    </th>
+                                    <td>
+                                        <div>
+                                            <h5 class="text-truncate font-size-14">3</h5>
+                                        </div>
+                                    </td>
+                                    <td>$ 255</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h6 class="m-0 text-right">Total:</h6>
+                                    </td>
+                                    <td>
+                                        $ 400
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btn-create-apt">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>

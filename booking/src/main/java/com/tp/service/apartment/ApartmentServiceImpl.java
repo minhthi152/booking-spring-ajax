@@ -58,6 +58,10 @@ public class ApartmentServiceImpl implements IApartmentService{
         return apartmentRepository.getById(id);
     }
 
+    public boolean existsById(Long id){
+        return apartmentRepository.existsById(id);
+    };
+
     @Override
     public Apartment save(Apartment apartment) {
         return apartmentRepository.save(apartment);

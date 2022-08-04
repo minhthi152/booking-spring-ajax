@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cg</groupId>
-    <artifactId>ajax-maven-bank-transaction-location-jwt</artifactId>
+    <artifactId>spring-ajax-booking</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>ajax-maven-bank-transaction-location-jwt Maven Webapp</name>
+    <name>spring-ajax-booking Maven Webapp</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
@@ -213,10 +213,16 @@
             <version>3.3.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>2.3.7</version>
+        </dependency>
+
     </dependencies>
 
     <build>
-        <finalName>ajax-maven-bank-transaction-location-jwt</finalName>
+        <finalName>spring-ajax-booking</finalName>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
                 <plugin>

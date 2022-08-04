@@ -1,0 +1,28 @@
+<th:block th:fragment="add_row_booking">
+    <textarea id="rowBooking" class="hide" hidden>
+        <tr id="tr_{0}">
+            <td>
+                <span class="select-tab unselected"></span>
+            </td>
+            <td>{0}</td>
+            <td>{1}</td>
+            <td>{2}</td>
+            <td>{3}</td>
+            <td>{4}</td>
+            <td>{5}</td>
+            <td>{6}</td>
+            <td>
+                <!-- Button trigger modal -->
+                <button id="btnUpdate_{0}" type="button" class="btn btn-success btn-sm btn-rounded waves-effect waves-light update" data-toggle="modal" data-target="#updateBookingModal">
+                    Update
+                </button>
+            </td>
+             <td>
+                <!-- Button trigger modal -->
+                <button id="btnDelete_{0}" type="button" class="btn btn-danger btn-sm btn-rounded waves-effect waves-light delete" data-toggle="modal">
+                    Delete
+                </button>
+            </td>
+        </tr>
+    </textarea>
+</th:block>

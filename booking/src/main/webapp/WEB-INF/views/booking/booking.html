@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>Booking | Thi </title>
+    <th:block th:replace="/layout/dashboard-css-links:: css-link" />
+
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+    <script type="text/javascript" src="/assets/js/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body data-sidebar="dark">
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+
+        <!--    top bar-->
+        <th:block th:replace="/layout/top-bar:: top-bar" />
+        <!-- ========== Left Sidebar Start ========== -->
+        <div class="vertical-menu">
+
+            <div data-simplebar="" class="h-100">
+
+                <!--- Sidemenu -->
+                <th:block th:replace="/layout/side-bar-menu:: side-bar-menu" />
+                <!-- Sidebar -->
+            </div>
+        </div>
+        <!-- Left Sidebar End -->
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+
+            <div class="page-content">
+                <div class="container-fluid">
+
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0 font-size-18">Booking</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row mt-3">
+                                        <div class="col-lg-2">
+                                            <h4 class="card-title mb-4">List of booking</h4>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button type="button" id="btn-add-booking" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" data-toggle="modal" data-target="#createBookingModal">
+                                                Add new
+                                            </button>
+                                        </div>
+                                        <div class="col-lg-4">
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <form class="app-search d-none d-lg-block">
+                                                <div class="position-relative" id="div-search">
+                                                    <input type="text" class="form-control" id="input-search" placeholder="...">
+                                                    <span class="bx bx-search-alt"></span>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="col-lg-1">
+                                            <button type="button" id="btn-search" class="btn btn-warning btn-sm btn-rounded waves-effect waves-light">
+                                                Search
+                                            </button>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-centered table-nowrap mb-0" id="tbListBooking">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th style="width: 20px;">
+                                                </th>
+                                                <th>ID</th>
+                                                <th>Apartment-ID</th>
+                                                <th>Check-in</th>
+                                                <th>Check-out</th>
+                                                <th>Tenant name</th>
+                                                <th>Tenant email</th>
+                                                <th>Tenant phone</th>
+                                                <th colspan="2" class="text-center">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <span class="select-tab unselected"></span>
+                                                        </td>
+                                                        <td> 1</td>
+                                                        <td>Barry Dick</td>
+                                                        <td>
+                                                            05 Oct, 2019
+                                                        </td>
+                                                        <td>
+                                                            $412
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>
+                                                            <!-- Button trigger modal -->
+                                                            <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" data-toggle="modal" data-target=".exampleModal">
+                                                                View Details
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- end table-responsive -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+
+            <th:block th:replace="/layout/footer:: footer" />
+
+        </div>
+        <!-- end main content-->
+
+    </div>
+    <!-- END layout-wrapper -->
+    <th:block th:replace="/booking/create:: create" />
+    <th:block th:replace="/booking/update:: update" />
+<!--    <th:block th:replace="/booking/addMoreBookingItem:: addMoreBookingItem" />-->
+    <!--<th:block th:replace="/layout/tempRowBooking:: add_row_booking" />-->
+
+    <th:block th:replace="/layout/dashboard-script:: script" />
+
+
+    <script type="text/javascript" src="/assets/js/jquery.validate-1.19.3.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/js/iziToast-1.4.0.js"></script>
+    <script type="text/javascript" src="/assets/js/app.js"></script>
+
+    <script>
+        let page = {
+            urls: {
+                getAllApartment: App.BASE_URL_APARTMENT,
+                getAllBooking: App.BASE_URL_BOOKING
+            },
+            element: {},
+            commands: {},
+        }
+
+        $('#btn-add-booking').on('click', () => {
+            $('#row-booking-item').html('');
+            $('#formCreateBooking .modal-alert-danger').html('').removeClass('show').addClass('hide');
+
+            $('#createBookingModal').modal('show');
+            getAllApartment(0);
+        })
+
+
+        let numberId = 0;
+        $('#btn-add-booking-item').on('click', function (){
+
+            numberId++;
+            let str =
+                `
+                 <div class="row" id="row_${numberId}">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <select id="list_apartment_${numberId}" class="form-control list_apartment">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <input type="date" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="check_out_">
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-danger btn-delete-booking-item" id="btn-delete-booking-item-${numberId}"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                `;
+
+            $('#row-booking-item').append(str);
+            getAllApartment(numberId);
+            handleDeleteBookingItemRow();
+
+        })
+
+
+        function getAllApartment(id){
+            $.ajax({
+                headers: {
+                    "Content-Type": "Application/json",
+                    "Accept": "Application/json"
+                },
+                type: "GET",
+                url: page.urls.getAllApartment
+            })
+                .done((data) => {
+                    $.each(data, (i, item) => {
+                        apartment = item;
+                        console.log(apartment);
+                        let str = `<option value="${apartment.id}">${apartment.title}</option>`;
+                        $('#list_apartment_' + id).append(str);
+                    })
+                })
+        }
+
+
+        function handleDeleteBookingItemRow(){
+            $('.btn-delete-booking-item').on('click', function (){
+                let id = this.id.replace("btn-delete-booking-item-", "");
+                console.log(id);
+                $('#row_' + id).remove();
+            })
+        }
+
+
+    </script>
+</body>
+
+</html>

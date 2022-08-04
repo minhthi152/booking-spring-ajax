@@ -21,4 +21,5 @@ public interface IApartmentService extends IGeneralService<Apartment>{
     Optional<ApartmentDTO> findApartmentDTOById(Long id);
 
     Apartment update(Apartment apartment);
+    boolean existsById(Long id);
 }

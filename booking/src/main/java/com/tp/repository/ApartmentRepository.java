@@ -18,6 +18,6 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
     @Query("SELECT NEW com.tp.model.dto.ApartmentDTO (a.id, a.title, a.apartmentType, a.area, a.price, a.description, a.kitchen, a.balcony, a.view, a.petAllowed, a.deleted) FROM Apartment a WHERE a.deleted = false AND a.id = ?1 ")
     Optional<ApartmentDTO> findApartmentDTOById(Long id);
 
-    @Query("SELECT NEW com.tp.model.dto.ApartmentDTO (a.id, a.title, a.apartmentType, a.area, a.price, a.description) FROM Apartment AS a JOIN ApartmentType AS at ON a.apartmentType.id = at.id WHERE CONCAT(a. id, a.title, a.apartmentType, a.area, a.price, a.description, at.name) LIKE %?1%")
+    @Query("SELECT NEW com.tp.model.dto.ApartmentDTO (a.id, a.title, a.apartmentType, a.area, a.price, a.description) FROM Apartment AS a JOIN ApartmentType AS at ON a.apartmentType.id = at.id WHERE a.deleted = false AND CONCAT(a. id, a.title, a.apartmentType, a.area, a.price, a.description, at.name) LIKE %?1%")
     List<ApartmentDTO> search(String keyword);
 }

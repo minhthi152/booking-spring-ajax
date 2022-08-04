@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/dashboard")
-public class ApartmentController {
+@RequestMapping("/booking")
+public class BookingController {
     @GetMapping
-    public ModelAndView showHomePage() {
+    public ModelAndView showBookingPage() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/apartment/dashboard");
+        modelAndView.setViewName("/booking/booking");
         return modelAndView;
     }
 }

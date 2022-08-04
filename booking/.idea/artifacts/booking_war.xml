@@ -7,7 +7,7 @@
         <packaging>war</packaging>
       </options>
     </properties>
-    <root id="archive" name="ajax-maven-bank-transaction-location-jwt.war">
+    <root id="archive" name="spring-ajax-booking.war">
       <element id="artifact" artifact-name="booking:war exploded" />
     </root>
   </artifact>

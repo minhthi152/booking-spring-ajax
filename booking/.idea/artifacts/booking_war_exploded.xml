@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="booking:war exploded">
-    <output-path>$PROJECT_DIR$/target/ajax-maven-bank-transaction-location-jwt</output-path>
+    <output-path>$PROJECT_DIR$/target/spring-ajax-booking</output-path>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>
@@ -89,10 +89,11 @@
           <element id="library" level="project" name="Maven: io.springfox:springfox-swagger-ui:2.9.2" />
           <element id="library" level="project" name="Maven: org.webjars:bootstrap:3.3.5" />
           <element id="library" level="project" name="Maven: org.webjars:jquery:1.11.1" />
+          <element id="library" level="project" name="Maven: org.modelmapper:modelmapper:2.3.7" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/ajax-maven-bank-transaction-location-jwt/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/spring-ajax-booking/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="booking/web/Web" />
     </root>

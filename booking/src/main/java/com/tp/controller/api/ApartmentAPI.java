@@ -37,23 +37,23 @@ public class ApartmentAPI {
     @GetMapping
     public ResponseEntity<List<?>> findAll() {
 
-        List<ApartmentDTO> Apartments = apartmentService.findAllApartmentDTOByDeletedIsFalse();
+        List<ApartmentDTO> apartments = apartmentService.findAllApartmentDTOByDeletedIsFalse();
 
-        if (Apartments.isEmpty()) {
+        if (apartments.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(Apartments, HttpStatus.OK);
+        return new ResponseEntity<>(apartments, HttpStatus.OK);
     }
 
     @GetMapping("/search/{word}")
     public ResponseEntity<List<?>> searchByWord(@PathVariable String word) {
 
-        List<ApartmentDTO> Apartments = apartmentService.searchAllByWord(word);
+        List<ApartmentDTO> apartments = apartmentService.searchAllByWord(word);
 
-        if (Apartments.isEmpty()) {
+        if (apartments.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(Apartments, HttpStatus.OK);
+        return new ResponseEntity<>(apartments, HttpStatus.OK);
     }
 
     @GetMapping("/update/{id}")
@@ -140,9 +140,4 @@ public class ApartmentAPI {
             throw new DataInputException("Invalid apartment information");
         }
     }
-
-
-
-
-
 }

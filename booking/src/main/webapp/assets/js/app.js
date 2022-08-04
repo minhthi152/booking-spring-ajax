@@ -9,6 +9,8 @@ class App {
 
     static BASE_URL_APARTMENT_TYPE = this.DOMAIN + "/api/apartmentType";
 
+    static BASE_URL_BOOKING = this.DOMAIN + "/api/booking"
+
     static ERROR_400 = "Please check the data!";
     static ERROR_401 = "Access Denied! Please log in.";
     static ERROR_403 = "Access Denied! You are not authorized to perform this function.";
@@ -138,6 +140,19 @@ class Apartment {
         this.balcony = balcony;
         this.view = view;
         this.petAllowed = petAllowed;
+    }
+}
+
+class Booking {
+    constructor(id, checkInDate, checkOutDate, apartment, tenantName, tenantEmail, tenantPhone) {
+        this.id = id;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.apartment = apartment;
+        this.tenantName = tenantName;
+        this.tenantEmail = tenantEmail;
+        this.tenantPhone = tenantPhone;
+
     }
 }
 

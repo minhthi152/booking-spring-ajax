@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
     <title>Dashboard | Thi </title>
@@ -93,7 +93,7 @@
                                             <th>Area</th>
                                             <th>Price</th>
                                             <th>Description</th>
-                                            <th colspan="2" class="text-center">View</th>
+                                            <th colspan="2" class="text-center">Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -140,9 +140,9 @@
 
 </div>
 <!-- END layout-wrapper -->
-<th:block th:replace="/create:: frm_create" />
-<th:block th:replace="/update:: frm_update" />
-<th:block th:replace="/layout/tempRow:: add_row_apartment" />
+<th:block th:replace="/apartment/create:: frm_create" />
+<th:block th:replace="/apartment/update:: frm_update" />
+<th:block th:replace="/layout/tempRowApt:: add_row_apartment" />
 <th:block th:replace="/layout/dashboard-script:: script" />
 
 
@@ -341,7 +341,11 @@
     //========================= SEARCH ===================================
     $('#btn-search').on('click', function(){
         let word = $('#input-search').val();
-        search(word);
+        if(word === ""){
+            loadApartments();
+        }else{
+            search(word);
+        }
     })
 
 
@@ -363,7 +367,7 @@
                     addRowApartment();
                 })
                 handleShowUpdate();
-                handleShowDelete()
+                handleShowDelete();
             })
     }
 
