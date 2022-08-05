@@ -72,6 +72,11 @@ public class ApartmentDTO implements Validator {
         this.deleted = deleted;
     }
 
+    public Apartment toApartmentFormBooking() {
+        return new Apartment()
+                .setId(id);
+    }
+
     public Apartment toApartment(){
         return new Apartment()
                 .setId(id)

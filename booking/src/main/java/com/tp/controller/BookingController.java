@@ -1,5 +1,7 @@
 package com.tp.controller;
 
+import com.tp.model.Apartment;
+import com.tp.model.dto.BookingApartmentDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

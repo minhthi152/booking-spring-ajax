@@ -46,7 +46,7 @@ public class BookingItem {
                 .setId(id)
                 .setCheckInDate(checkInDate)
                 .setCheckOutDate(checkOutDate)
-                .setApartmentDTO(apartment.toApartmentDTO());
+                .setApartment(apartment.toBookingApartmentDTO());
     }
 
 

@@ -58,7 +58,7 @@ public class BookingServiceImpl implements IBookingService{
 
     @Override
     public Booking save(Booking booking) {
-        return null;
+        return bookingRepository.save(booking);
     }
 
     @Override

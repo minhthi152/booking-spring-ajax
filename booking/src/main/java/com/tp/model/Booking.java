@@ -33,16 +33,19 @@ public class Booking {
     private String tenantPhone;
 
     @OneToMany
-    @Column(name = "booking_item")
     private List<BookingItem> bookingItemList;
 
-
-    public BookingDTO toBookingDTO(List<BookingItemDTO> bookingItemDTOList){
+    public BookingDTO toBookingDTO() {
         return new BookingDTO()
-                .setId(id)
-                .setTenantName(tenantName)
-                .setTenantEmail(tenantEmail)
-                .setTenantPhone(tenantPhone)
-                .setBookingItemDTOList(bookingItemDTOList);
+                .setId(id);
     }
+
+//    public BookingDTO toBookingDTO(List<BookingItemDTO> bookingItemDTOList){
+//        return new BookingDTO()
+//                .setId(id)
+//                .setTenantName(tenantName)
+//                .setTenantEmail(tenantEmail)
+//                .setTenantPhone(tenantPhone)
+//                .setBookingItemDTOList(bookingItemDTOList);
+//    }
 }

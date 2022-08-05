@@ -42,12 +42,11 @@ public class BookingDTO {
         this.bookingItemList = bookingItemList;
     }
 
-    public Booking toBooking(List<BookingItem> bookingItemList){
+    public Booking toBooking(){
         return new Booking()
                 .setId(id)
                 .setTenantName(tenantName)
                 .setTenantEmail(tenantEmail)
-                .setTenantPhone(tenantPhone)
-                .setBookingItemList(bookingItemList);
+                .setTenantPhone(tenantPhone);
     }
 }

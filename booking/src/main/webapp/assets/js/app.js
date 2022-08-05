@@ -103,6 +103,39 @@ class App {
         }
     }
 
+    static drawApartment(numberId) {
+        let str = `
+            <div class="row" id="row_${numberId}">
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <select id="list_apartment_${numberId}" class="form-control list_apartment" data-number-id="${numberId}">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <input type="date" class="form-control check-in-date" data-number-id="${numberId}">
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <input type="date" class="form-control check-out-date" data-number-id="${numberId}">
+                    </div>
+                </div>
+                <div class="col-lg-1">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-danger btn-delete-booking-item" data-number-id="${numberId}">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return str;
+    }
+
 }
 
 class User {

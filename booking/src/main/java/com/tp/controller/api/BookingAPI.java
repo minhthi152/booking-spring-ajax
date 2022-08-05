@@ -5,11 +5,10 @@ import com.tp.exception.ResourceNotFoundException;
 import com.tp.model.Apartment;
 import com.tp.model.Booking;
 import com.tp.model.BookingItem;
-import com.tp.model.dto.ApartmentDTO;
-import com.tp.model.dto.BookingDTO;
-import com.tp.model.dto.BookingItemDTO;
+import com.tp.model.dto.*;
 import com.tp.service.apartment.IApartmentService;
 import com.tp.service.booking.IBookingService;
+import com.tp.service.bookingItem.IBookingItemService;
 import com.tp.util.AppUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,6 +30,9 @@ public class BookingAPI {
     private IBookingService bookingService;
 
     @Autowired
+    private IBookingItemService bookingItemService;
+
+    @Autowired
     private IApartmentService apartmentService;
 
     @Autowired
@@ -46,25 +48,57 @@ public class BookingAPI {
         return new ResponseEntity<>(bookingDTOS, HttpStatus.OK);
     }
 
+//    @PostMapping("/create")
+//    public ResponseEntity<?> create(@RequestBody BookingDTO bookingDTO, BindingResult bindingResult){
+//
+//
+//        bookingDTO.setId(0);
+//        try {
+//
+//            List<BookingItemDTO> bookingItemDTOList = bookingDTO.getBookingItemDTOList();
+//            List<BookingItem> bookingItemList = new ArrayList<>();
+//
+//            for (BookingItemDTO bookingItemDTO: bookingItemDTOList) {
+//                bookingItemList.add(bookingItemDTO.toBookingItem());
+//            }
+//
+//            Booking createdBooking = bookingService.create(bookingDTO.toBooking(bookingItemList));
+//
+//            bookingDTO = createdBooking.toBookingDTO(bookingItemDTOList);
+//
+//            return new ResponseEntity<>(bookingDTO, HttpStatus.CREATED);
+//
+//        } catch (DataIntegrityViolationException e) {
+//            throw new DataInputException("Booking creation information is not valid, please check the information again");
+//        }
+//
+//    }
+
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody BookingDTO bookingDTO, BindingResult bindingResult){
+    public ResponseEntity<?> create(@RequestBody CreateBookingDTO bookingDTO, BindingResult bindingResult){
 
+        bookingDTO.setId(0L);
 
-        bookingDTO.setId(0);
         try {
 
-            List<BookingItemDTO> bookingItemDTOList = bookingDTO.getBookingItemDTOList();
-            List<BookingItem> bookingItemList = new ArrayList<>();
+            Booking booking = bookingDTO.toBooking();
 
-            for (BookingItemDTO bookingItemDTO: bookingItemDTOList) {
-                bookingItemList.add(bookingItemDTO.toBookingItem());
+            Booking bookingSaved = bookingService.save(booking);
+            BookingDTO bookingDTONew = bookingSaved.toBookingDTO();
+
+            List<BookingItemDTO> bookingItemDTOS = bookingDTO.getBookingItems();
+
+//            List<BookingItem> bookingItemList = new ArrayList<>();
+
+            for (BookingItemDTO bookingItemDTO: bookingItemDTOS) {
+                bookingItemDTO.setId(0L);
+                bookingItemDTO.setBooking(bookingDTONew);
+//                bookingItemList.add(bookingItemDTO.toBookingItem());
+                BookingItem bookingItem = bookingItemDTO.toBookingItem();
+                bookingItemService.save(bookingItem);
             }
 
-            Booking createdBooking = bookingService.create(bookingDTO.toBooking(bookingItemList));
-
-            bookingDTO = createdBooking.toBookingDTO(bookingItemDTOList);
-
-            return new ResponseEntity<>(bookingDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
 
         } catch (DataIntegrityViolationException e) {
             throw new DataInputException("Booking creation information is not valid, please check the information again");

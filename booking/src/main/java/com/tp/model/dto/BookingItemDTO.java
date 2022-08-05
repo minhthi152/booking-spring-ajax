@@ -29,18 +29,17 @@ public class BookingItemDTO {
 //    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Ho_Chi_Minh")
     private Date checkOutDate;
 
-    private ApartmentDTO apartmentDTO;
+    private BookingApartmentDTO apartment;
 
-    private BookingDTO bookingDTO;
+    private BookingDTO booking;
 
     public BookingItem toBookingItem(){
         return new BookingItem()
                 .setId(id)
                 .setCheckInDate(checkInDate)
                 .setCheckOutDate(checkOutDate)
-                .setApartment(apartmentDTO.toApartment());
+                .setApartment(apartment.toApartment())
+                .setBooking(booking.toBooking());
     }
-
-
 
 }

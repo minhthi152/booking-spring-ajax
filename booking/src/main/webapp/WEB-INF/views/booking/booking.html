@@ -142,9 +142,6 @@
     <!-- END layout-wrapper -->
     <th:block th:replace="/booking/create:: create" />
     <th:block th:replace="/booking/update:: update" />
-<!--    <th:block th:replace="/booking/addMoreBookingItem:: addMoreBookingItem" />-->
-    <!--<th:block th:replace="/layout/tempRowBooking:: add_row_booking" />-->
-
     <th:block th:replace="/layout/dashboard-script:: script" />
 
 
@@ -158,13 +155,55 @@
         let page = {
             urls: {
                 getAllApartment: App.BASE_URL_APARTMENT,
-                getAllBooking: App.BASE_URL_BOOKING
+                getAllBooking: App.BASE_URL_BOOKING,
+                createBooking: App.BASE_URL_BOOKING + "/create"
             },
             element: {},
             commands: {},
         }
 
+        let booking = {};
+
+        let bookingItem = {
+            checkInDate: null,
+            checkOutDate: null,
+            apartment: {
+                "id": null
+            }
+        }
+
+        let bookingItems = [];
+
+        bookingItems.push({
+            "id": "bookingItem_0",
+            "data": {
+                checkInDate: null,
+                checkOutDate: null,
+                apartment: {
+                    id: null
+                }
+            }
+        });
+
+        function getItem(bk) {
+            for (let i = 0; i < bookingItems.length; i++) {
+                if (bookingItems[i].id === bk) {
+                    return bookingItems[i];
+                }
+            }
+        }
+
+        function setItemData(data) {
+            for (let i = 0; i < bookingItems.length; i++) {
+                if (bookingItems[i].id === data.id) {
+                    bookingItems[i] = data;
+                    return;
+                }
+            }
+        }
+
         $('#btn-add-booking').on('click', () => {
+            bookingItems.splice(1, bookingItems.length -1);
             $('#row-booking-item').html('');
             $('#formCreateBooking .modal-alert-danger').html('').removeClass('show').addClass('hide');
 
@@ -175,44 +214,39 @@
 
         let numberId = 0;
         $('#btn-add-booking-item').on('click', function (){
-
             numberId++;
-            let str =
-                `
-                 <div class="row" id="row_${numberId}">
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <select id="list_apartment_${numberId}" class="form-control list_apartment">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <input type="date" class="form-control" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                            <input type="date" class="form-control" id="check_out_">
-                        </div>
-                    </div>
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <button type="button" class="btn btn-danger btn-delete-booking-item" id="btn-delete-booking-item-${numberId}"><i class="fa fa-minus"></i></button>
-                        </div>
-                    </div>
-                </div>
-                `;
-
+            let str = App.drawApartment(numberId);
             $('#row-booking-item').append(str);
+
+            handleChangeApartment();
+            handleChangeCheckInDate();
+            handleChangeCheckOutDate();
+
+            bookingItem.checkInDate = null;
+            bookingItem.checkOutDate = null;
+            bookingItem.apartment.id = null;
+
+            let bk = "bookingItem_" + numberId;
+
+            bookingItems.push({
+                "id": bk,
+                "data": {
+                    checkInDate: null,
+                    checkOutDate: null,
+                    apartment: {
+                        id: null
+                    }
+                }
+            });
+
+            console.log(bookingItems);
+
             getAllApartment(numberId);
             handleDeleteBookingItemRow();
-
         })
 
-
         function getAllApartment(id){
+            $('#list_apartment_' + id).html('');
             $.ajax({
                 headers: {
                     "Content-Type": "Application/json",
@@ -224,21 +258,99 @@
                 .done((data) => {
                     $.each(data, (i, item) => {
                         apartment = item;
-                        console.log(apartment);
                         let str = `<option value="${apartment.id}">${apartment.title}</option>`;
                         $('#list_apartment_' + id).append(str);
                     })
                 })
         }
 
-
         function handleDeleteBookingItemRow(){
             $('.btn-delete-booking-item').on('click', function (){
-                let id = this.id.replace("btn-delete-booking-item-", "");
-                console.log(id);
+                let id = $(this).data("number-id");
                 $('#row_' + id).remove();
+
+                bookingItems.splice(id, 1);
             })
         }
+
+        function handleChangeApartment() {
+            $(".list_apartment").change(function () {
+                let numberId = $(this).data("number-id");
+
+                let id = "bookingItem_" + numberId;
+                let obj = getItem(id);
+                obj.data.apartment.id = $(this).val();
+                setItemData(obj);
+            })
+        }
+
+        function handleChangeCheckInDate() {
+            $(".check-in-date").change(function () {
+                let numberId = $(this).data("number-id");
+
+                bookingItem.checkInDate = $(this).val();
+                let id = "bookingItem_" + numberId;
+                let obj = getItem(id);
+                obj.data.checkInDate = $(this).val();
+                setItemData(obj);
+            })
+        }
+
+        function handleChangeCheckOutDate() {
+            $(".check-out-date").change(function () {
+                let numberId = $(this).data("number-id");
+
+                bookingItem.checkOutDate = $(this).val();
+                let id = "bookingItem_" + numberId;
+                let obj = getItem(id);
+                obj.data.checkOutDate = $(this).val();
+                setItemData(obj);
+            })
+        }
+
+        function handleCreateBooking() {
+            console.log("create booking");
+            booking.tenantName = $("#tenant-name").val();
+            booking.tenantEmail = $("#tenant-email").val();
+            booking.tenantPhone = $("#tenant-phone").val();
+
+            let bookingItemSend = [];
+
+            for (let i = 0; i < bookingItems.length; i++) {
+                bookingItemSend.push(bookingItems[i].data);
+            }
+
+            booking.bookingItems = bookingItemSend;
+
+            console.log(booking);
+
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "POST",
+                "url": page.urls.createBooking,
+                "data": JSON.stringify(booking)
+            })
+                .done((data) => {
+                    console.log(data);
+                })
+                .fail((jqXHR) => {
+                    console.log(jqXHR);
+                })
+
+        }
+
+
+        $("#btnCreateBooking").on("click", () => {
+            handleCreateBooking();
+            setTimeout(function () {
+                $('#createBookingModal').modal('hide');
+            }, 500);
+
+        })
+
 
 
     </script>

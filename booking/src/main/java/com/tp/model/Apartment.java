@@ -1,6 +1,7 @@
 package com.tp.model;
 
 import com.tp.model.dto.ApartmentDTO;
+import com.tp.model.dto.BookingApartmentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,7 +49,7 @@ public class Apartment {
     @Column(columnDefinition = "boolean default false")
     private boolean view;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(name = "pet_allowed", columnDefinition = "boolean default false")
     private boolean petAllowed;
 
     @Column(columnDefinition = "boolean default false")
@@ -67,6 +68,11 @@ public class Apartment {
                 .setView(view)
                 .setPetAllowed(petAllowed)
                 .setDeleted(deleted);
+    }
+
+    public BookingApartmentDTO toBookingApartmentDTO() {
+        return new BookingApartmentDTO()
+                .setId(id);
     }
 
 }
