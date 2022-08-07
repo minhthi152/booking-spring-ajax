@@ -12,6 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class BookingController {
     @GetMapping
     public ModelAndView showBookingPage() {
+
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/booking/booking");
         return modelAndView;

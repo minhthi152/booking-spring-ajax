@@ -2,6 +2,7 @@ package com.tp.service.bookingItem;
 
 
 import com.tp.model.BookingItem;
+import com.tp.model.dto.BookingItemDTO;
 import com.tp.repository.BookingItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,17 @@ public class BookingItemServiceImpl implements IBookingItemService {
     @Override
     public List<BookingItem> findAll() {
         return null;
+    }
+
+    @Override
+    public List<BookingItemDTO> findAllBookingItemDTO(Long id) {
+
+        return bookingItemRepository.findAllBookingDTO(id);
+    }
+
+    @Override
+    public List<BookingItemDTO> findAllBookingItemDTOs() {
+        return bookingItemRepository.findAllBookingDTOs();
     }
 
     @Override

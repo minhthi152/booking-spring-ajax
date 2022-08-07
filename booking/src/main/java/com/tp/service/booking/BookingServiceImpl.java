@@ -3,6 +3,7 @@ package com.tp.service.booking;
 import com.tp.model.Booking;
 import com.tp.model.BookingItem;
 import com.tp.model.dto.BookingDTO;
+import com.tp.model.dto.CreateBookingDTO;
 import com.tp.repository.ApartmentRepository;
 import com.tp.repository.BookingItemRepository;
 import com.tp.repository.BookingRepository;
@@ -30,10 +31,10 @@ public class BookingServiceImpl implements IBookingService{
     }
 
     @Override
-    public List<BookingDTO> findAllBookingDTO() {
-        return null;
-//        return bookingRepository.findAllBookingDTO();
+    public List<CreateBookingDTO> findAllBookingDTO() {
+        return bookingRepository.findAllBookingDTO();
     }
+
 
     @Override
     public Booking create(Booking booking) {

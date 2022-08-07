@@ -64,7 +64,7 @@
                                         <div class="col-lg-3">
                                             <form class="app-search d-none d-lg-block">
                                                 <div class="position-relative" id="div-search">
-                                                    <input type="text" class="form-control" id="input-search" placeholder="...">
+                                                    <input type="text" class="form-control" id="input-search" placeholder="Search...">
                                                     <span class="bx bx-search-alt"></span>
                                                 </div>
                                             </form>
@@ -86,9 +86,6 @@
                                                 <th style="width: 20px;">
                                                 </th>
                                                 <th>ID</th>
-                                                <th>Apartment-ID</th>
-                                                <th>Check-in</th>
-                                                <th>Check-out</th>
                                                 <th>Tenant name</th>
                                                 <th>Tenant email</th>
                                                 <th>Tenant phone</th>
@@ -96,28 +93,25 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <span class="select-tab unselected"></span>
-                                                        </td>
-                                                        <td> 1</td>
-                                                        <td>Barry Dick</td>
-                                                        <td>
-                                                            05 Oct, 2019
-                                                        </td>
-                                                        <td>
-                                                            $412
-                                                        </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>
-                                                            <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" data-toggle="modal" data-target=".exampleModal">
-                                                                View Details
-                                                            </button>
-                                                        </td>
-                                                    </tr>
+<!--                                                    <tr>-->
+<!--                                                        <td>-->
+<!--                                                            <span class="select-tab unselected"></span>-->
+<!--                                                        </td>-->
+<!--                                                        <td> 1</td>-->
+<!--                                                        <td>Barry Dick</td>-->
+<!--                                                        <td>-->
+<!--                                                            05 Oct, 2019-->
+<!--                                                        </td>-->
+<!--                                                        <td>-->
+<!--                                                            $412-->
+<!--                                                        </td>-->
+<!--                                                        <td>-->
+<!--                                                            &lt;!&ndash; Button trigger modal &ndash;&gt;-->
+<!--                                                            <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" data-toggle="modal" data-target=".exampleModal">-->
+<!--                                                                View Details-->
+<!--                                                            </button>-->
+<!--                                                        </td>-->
+<!--                                                    </tr>-->
 
                                             </tbody>
                                         </table>
@@ -150,6 +144,7 @@
     <script type="text/javascript" src="/assets/js/sweetalert2.min.js"></script>
     <script type="text/javascript" src="/assets/js/iziToast-1.4.0.js"></script>
     <script type="text/javascript" src="/assets/js/app.js"></script>
+    <script type="text/javascript" src="/assets/js/custom-validate.js"></script>
 
     <script>
         let page = {
@@ -162,38 +157,78 @@
             commands: {},
         }
 
+        let apartments = [];
+        let apartment = new Apartment();
+
         let booking = {};
 
-        let bookingItem = {
-            checkInDate: null,
-            checkOutDate: null,
-            apartment: {
-                "id": null
+        function getToday(day) {
+            let today = new Date();
+            let dd = String(today.getDate() + day).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0');
+            let yyyy = today.getFullYear();
+            today = yyyy + '-' + mm + '-' + dd;
+
+            return today;
+        }
+
+        function getFullDateAddOneDay(fullDate) {
+            let minDate = new Date(fullDate);
+            minDate.setDate(minDate.getDate() + 1);
+
+            let dd = String(minDate.getDate()).padStart(2, '0');
+            let mm = String(minDate.getMonth() + 1).padStart(2, '0');
+            let yyyy = minDate.getFullYear();
+
+            fullDate = yyyy + '-' + mm + '-' + dd;
+
+            return fullDate;
+        }
+
+        let tempBookingItem = () => {
+            return {
+                id: 0,
+                data: {
+                    checkInDate: getToday(0),
+                    checkOutDate: getToday(1),
+                    apartment: {
+                        id: null
+                    }
+                }
             }
         }
+
+        let bookingItem = tempBookingItem();
 
         let bookingItems = [];
 
-        bookingItems.push({
-            "id": "bookingItem_0",
-            "data": {
-                checkInDate: null,
-                checkOutDate: null,
-                apartment: {
-                    id: null
-                }
-            }
-        });
+        let numberId = 0;
 
-        function getItem(bk) {
-            for (let i = 0; i < bookingItems.length; i++) {
-                if (bookingItems[i].id === bk) {
-                    return bookingItems[i];
+        bookingItems.push(bookingItem);
+
+        function getApartmentData(id) {
+            let obj = null;
+            for (let i = 0; i < apartments.length; i++) {
+                if (apartments[i].id === id) {
+                    obj = apartments[i];
                 }
             }
+
+            return obj;
         }
 
-        function setItemData(data) {
+        function getBookingItem(id) {
+            let obj = null;
+            for (let i = 0; i < bookingItems.length; i++) {
+                if (bookingItems[i].id === id) {
+                    obj = bookingItems[i];
+                }
+            }
+
+            return obj;
+        }
+
+        function setBookingItemData(data) {
             for (let i = 0; i < bookingItems.length; i++) {
                 if (bookingItems[i].id === data.id) {
                     bookingItems[i] = data;
@@ -202,52 +237,68 @@
             }
         }
 
+        function deleteItemData(data) {
+            for (let i = 0; i < bookingItems.length; i++) {
+                if (bookingItems[i].id === data.id) {
+                    bookingItems[i].data = null;
+                    return;
+                }
+            }
+        }
+
         $('#btn-add-booking').on('click', () => {
-            bookingItems.splice(1, bookingItems.length -1);
             $('#row-booking-item').html('');
+            $('#booking-calculate tbody').empty();
             $('#formCreateBooking .modal-alert-danger').html('').removeClass('show').addClass('hide');
 
             $('#createBookingModal').modal('show');
-            getAllApartment(0);
+            $("#tenant-name").val("");
+            $("#tenant-email").val("");
+            $("#tenant-phone").val("");
+            $(".check-in-date").val("");
+            $(".check-out-date").val("");
         })
 
 
-        let numberId = 0;
+
         $('#btn-add-booking-item').on('click', function (){
+
             numberId++;
-            let str = App.drawApartment(numberId);
+            let str = App.drawModalRowBooking(numberId);
             $('#row-booking-item').append(str);
 
-            handleChangeApartment();
-            handleChangeCheckInDate();
-            handleChangeCheckOutDate();
+            // let str1 = App.drawBookingItemPrice($('#list_apartment_' + numberId).val(),$("#check-in-date-").val("") - $("#check-out-date-").val(""), 1000 );
+            // $('#booking-calculate').prepend(str1);
 
-            bookingItem.checkInDate = null;
-            bookingItem.checkOutDate = null;
-            bookingItem.apartment.id = null;
+            $("#check-in-date-" + numberId).val(getToday(0));
+            $("#check-out-date-" + numberId).val(getToday(1));
 
-            let bk = "bookingItem_" + numberId;
+            bookingItem = tempBookingItem();
+            bookingItem.id = numberId;
+            bookingItem.data.checkInDate = getToday(0);
+            bookingItem.data.checkOutDate = getToday(1);
+            bookingItem.data.apartment.id = null;
+            bookingItems.push(bookingItem);
 
-            bookingItems.push({
-                "id": bk,
-                "data": {
-                    checkInDate: null,
-                    checkOutDate: null,
-                    apartment: {
-                        id: null
-                    }
-                }
-            });
+            drawListApartments(numberId);
 
-            console.log(bookingItems);
-
-            getAllApartment(numberId);
-            handleDeleteBookingItemRow();
+            handleMinCheckInDate(numberId);
+            disableCheckOutDate(numberId);
         })
 
-        function getAllApartment(id){
-            $('#list_apartment_' + id).html('');
-            $.ajax({
+        function drawListApartments(id) {
+            $('#list_apartment_' + id).empty();
+
+            bookingItems[id].data.apartment.id = apartments[0].id;
+
+            $.each(apartments, (i, item) => {
+                let str = `<option value="${item.id}">${item.title}</option>`;
+                $('#list_apartment_' + id).append(str);
+            })
+        }
+
+        function getAllApartment(){
+            return $.ajax({
                 headers: {
                     "Content-Type": "Application/json",
                     "Accept": "Application/json"
@@ -258,58 +309,139 @@
                 .done((data) => {
                     $.each(data, (i, item) => {
                         apartment = item;
-                        let str = `<option value="${apartment.id}">${apartment.title}</option>`;
-                        $('#list_apartment_' + id).append(str);
+                        apartments.push(apartment);
                     })
                 })
         }
 
         function handleDeleteBookingItemRow(){
-            $('.btn-delete-booking-item').on('click', function (){
+            $("#formCreateBooking").on("click", ".btn-delete-booking-item", function () {
                 let id = $(this).data("number-id");
                 $('#row_' + id).remove();
-
-                bookingItems.splice(id, 1);
-            })
+                deleteItemData(getBookingItem(id));
+            });
         }
 
         function handleChangeApartment() {
-            $(".list_apartment").change(function () {
+            $("#formCreateBooking").on("change", ".list_apartment", function () {
                 let numberId = $(this).data("number-id");
-
-                let id = "bookingItem_" + numberId;
-                let obj = getItem(id);
-                obj.data.apartment.id = $(this).val();
-                setItemData(obj);
-            })
+                let obj = getBookingItem(numberId);
+                obj.data.apartment.id = +$(this).val();
+                setBookingItemData(obj);
+            });
         }
 
         function handleChangeCheckInDate() {
-            $(".check-in-date").change(function () {
+            $("#formCreateBooking").on("change", ".check-in-date", function () {
                 let numberId = $(this).data("number-id");
-
-                bookingItem.checkInDate = $(this).val();
-                let id = "bookingItem_" + numberId;
-                let obj = getItem(id);
+                let obj = getBookingItem(numberId);
                 obj.data.checkInDate = $(this).val();
-                setItemData(obj);
-            })
+                setBookingItemData(obj);
+
+                let minCheckInDate = $(this).val();
+                handleMinCheckInDate(numberId);
+
+                let minCheckOutDate = $("#check-out-date-" + numberId).val();
+
+                minCheckInDate = getFullDateAddOneDay(minCheckInDate);
+
+                if (minCheckOutDate === '') {
+                    $("#check-out-date-" + numberId).val(minCheckInDate);
+                }
+
+                if (minCheckInDate > minCheckOutDate) {
+                    $("#check-out-date-" + numberId).val(minCheckInDate);
+                }
+
+                enableCheckOutDate(numberId);
+
+                handleMinCheckOutDate(numberId, minCheckInDate);
+            });
         }
 
         function handleChangeCheckOutDate() {
-            $(".check-out-date").change(function () {
+            $("#formCreateBooking").on("change", ".check-out-date", function () {
                 let numberId = $(this).data("number-id");
+                let obj = getBookingItem(numberId);
 
-                bookingItem.checkOutDate = $(this).val();
-                let id = "bookingItem_" + numberId;
-                let obj = getItem(id);
-                obj.data.checkOutDate = $(this).val();
-                setItemData(obj);
-            })
+                let minCheckInDate = $("#check-in-date-" + numberId).val();
+                let minCheckOutDate = $("#check-out-date-" + numberId).val();
+
+                if (minCheckInDate === '') {
+                    minCheckInDate = getToday(0);
+                }
+
+                if (minCheckOutDate === '') {
+                    $("#check-out-date-" + numberId).val(getFullDateAddOneDay(minCheckInDate));
+                }
+
+                if (minCheckInDate >= minCheckOutDate) {
+                    minCheckInDate = getFullDateAddOneDay(minCheckInDate);
+                    minCheckOutDate = minCheckInDate;
+                    $("#check-out-date-" + numberId).val(minCheckInDate);
+                }
+
+                obj.data.checkOutDate = minCheckOutDate;
+
+                setBookingItemData(obj);
+            });
         }
 
+        function checkDataIsValid() {
+            let bookingItemsLength = bookingItems.length;
+            let dataIsValid = true;
+
+            for (let i = 0; i < bookingItemsLength; i++) {
+                if (
+                    bookingItems[i].data.apartment.id == null
+                    || bookingItems[i].data.checkInDate == null
+                    || bookingItems[i].data.checkOutDate == null
+                ) {
+                    dataIsValid = false;
+                }
+            }
+
+            return dataIsValid;
+        }
+
+        function getDuration(startDate, endDate) {
+            startDate = new Date(startDate);
+            endDate = new Date(endDate);
+            return Math.ceil(Math.abs(startDate - endDate) / (1000 * 60 * 60 * 24));
+        }
+
+        $("#btnCheckData").on("click", () => {
+            let dataIsValid = checkDataIsValid();
+
+            if (!dataIsValid) {
+                App.IziToast.showErrorAlert("Vui lòng chọn đầy đủ thông tin");
+            }
+            else {
+                $('#booking-calculate tbody').empty();
+                $('#booking-calculate tbody tr:last').remove();
+                let sum = 0;
+
+                $.each(bookingItems, (i, item) => {
+                    let apartmentId = item.data.apartment.id;
+                    let apartmentObj = getApartmentData(apartmentId);
+
+                    let str = App.drawBookingItemPrice(apartmentObj.title, getDuration(item.data.checkInDate, item.data.checkOutDate), apartmentObj.price);
+                    $('#booking-calculate tbody').prepend(str);
+                    sum += apartmentObj.price * getDuration(item.data.checkInDate, item.data.checkOutDate);
+
+                });
+                console.log(sum);
+
+                let strSum = App.drawBookingSum(sum);
+                $('#booking-calculate tbody').append(strSum);
+
+                $("#btnCreateBooking").addClass("show").removeClass("hide");
+            }
+        });
+
+
+
         function handleCreateBooking() {
-            console.log("create booking");
             booking.tenantName = $("#tenant-name").val();
             booking.tenantEmail = $("#tenant-email").val();
             booking.tenantPhone = $("#tenant-phone").val();
@@ -317,41 +449,161 @@
             let bookingItemSend = [];
 
             for (let i = 0; i < bookingItems.length; i++) {
-                bookingItemSend.push(bookingItems[i].data);
+                if (bookingItems[i].data != null) {
+                    bookingItemSend.push(bookingItems[i].data);
+                }
             }
 
             booking.bookingItems = bookingItemSend;
 
-            console.log(booking);
+            let dataIsValid = checkDataIsValid();
 
-            $.ajax({
-                "headers": {
-                    "accept": "application/json",
-                    "content-type": "application/json"
-                },
-                "type": "POST",
-                "url": page.urls.createBooking,
-                "data": JSON.stringify(booking)
-            })
+            if (!dataIsValid) {
+                App.IziToast.showErrorAlert("Vui lòng chọn đầy đủ thông tin");
+            }
+            else {
+                $.ajax({
+                    "headers": {
+                        "accept": "application/json",
+                        "content-type": "application/json"
+                    },
+                    "type": "POST",
+                    "url": page.urls.createBooking,
+                    "data": JSON.stringify(booking)
+                })
                 .done((data) => {
-                    console.log(data);
+                    booking = data;
+                    let str = App.drawRowBooking(booking.id, booking.tenantName, booking.tenantEmail, booking.tenantPhone)
+                    $('#tbListBooking tbody').prepend(str);
+
+                    $('#booking-calculate tbody').empty();
+
+                    bookingItems.splice(0, bookingItems.length);
+                    bookingItems.push({
+                        id: 0,
+                        data: {
+                            checkInDate: null,
+                            checkOutDate: null,
+                            apartment: {
+                                id: null
+                            }
+                        }
+                    });
+
+                    $('#createBookingModal').modal('hide');
+                    App.IziToast.showSuccessAlert("Booking success");
+
+                    $("#btnCreateBooking").addClass("hide").removeClass("show");
+
                 })
                 .fail((jqXHR) => {
+                    $('#formCreateBooking .modal-alert-danger').html('').removeClass('hide').addClass('show');
                     console.log(jqXHR);
+
+                    let str = ``;
+
+                    if (jqXHR.status === 401) {
+                        str += `<label id="message-error" class="input-error" for="message">${App.ERROR_401}</label>`;
+                    } else {
+                        if (jqXHR.status === 403) {
+                            str += `<label id="message-error" class="input-error" for="message">${App.ERROR_403}</label>`;
+                        } else {
+                            if (jqXHR.responseJSON) {
+                                if (jqXHR.responseJSON.message) {
+                                    str += `<label id="message-error" class="input-error" for="message">${jqXHR.responseJSON.message}</label>`;
+                                } else {
+                                    $.each(jqXHR.responseJSON, function (key, value) {
+                                        str += `<label id="${key}-error" class="input-error" for="${key}">${value}</label>`;
+                                        $("#" + key).addClass("input-error");
+                                    });
+                                }
+                            } else {
+                                str += `<label id="message-error" class="input-error" for="message">${App.ERROR_500}</label>`;
+                            }
+                        }
+                    }
+
+                    $('#formCreateBooking .modal-alert-danger').append(str);
+                })
+            }
+        }
+
+        $("#btnCreateBooking").on("click", () => {
+            $("#formCreateBooking").submit();
+        })
+
+        function getAllBookings(){
+            $.ajax({
+                headers: {
+                    "Content-Type": "Application/json",
+                    "Accept": "Application/json"
+                },
+                type: "GET",
+                url: page.urls.getAllBooking
+            })
+                .done((data) => {
+                    $('#tbListBooking tbody').html("");
+                    $.each(data, (i, item) => {
+                        booking = item;
+                        let str = App.drawRowBooking(booking.id, booking.tenantName, booking.tenantEmail, booking.tenantPhone)
+
+                        $('#tbListBooking tbody').prepend(str);
+                    })
                 })
 
         }
 
 
-        $("#btnCreateBooking").on("click", () => {
-            handleCreateBooking();
-            setTimeout(function () {
-                $('#createBookingModal').modal('hide');
-            }, 500);
-
-        })
+    //    =============== disable past date for input ===============
 
 
+
+        function handleMinCheckInDate(rowId) {
+            $("#check-in-date-" + rowId).attr("min", getToday(0));
+        }
+
+        function handleMinCheckOutDate(rowId, minCheckInDate) {
+            $("#check-out-date-" + rowId).attr("min", minCheckInDate);
+        }
+
+        function disableCheckOutDate(id) {
+            $('#check-out-date-' + id).prop( "readonly", true );
+        }
+
+        function enableCheckOutDate(id) {
+            $('#check-out-date-' + id).prop( "readonly", false );
+        }
+
+        function initFirstRowBooking() {
+            console.log("initFirstRowBooking");
+            let inDate = getToday(0);
+            let outDate = getToday(1);
+            setTimeout(() => {
+                console.log("setTimeout initFirstRowBooking")
+                $('#check-in-date-0').val(inDate);
+                $('#check-out-date-0').val(outDate);
+            }, 1000)
+        }
+
+        let initializeControlEvent = () => {
+            initFirstRowBooking();
+            handleChangeApartment();
+            handleChangeCheckInDate();
+            handleChangeCheckOutDate();
+            handleDeleteBookingItemRow();
+
+            handleMinCheckInDate(0);
+            disableCheckOutDate(0);
+        }
+
+        $(() => {
+            getAllBookings();
+            getAllApartment().then(() => {
+                drawListApartments(0);
+            });
+
+            initializeControlEvent();
+        });
 
     </script>
 </body>

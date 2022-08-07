@@ -66,7 +66,7 @@
                                     <div class="col-lg-3">
                                         <form class="app-search d-none d-lg-block">
                                             <div class="position-relative" id="div-search">
-                                                <input type="text" class="form-control" id="input-search" placeholder="...">
+                                                <input type="text" class="form-control" id="input-search" placeholder="Search...">
                                                 <span class="bx bx-search-alt"></span>
                                             </div>
                                         </form>
@@ -156,7 +156,6 @@
 
     let apartmentTypeDTO = new ApartmentTypeDTO();
     let apartment = new Apartment();
-
 
     let page = {
         urls: {
@@ -440,9 +439,7 @@
                             alert("fail")
                             console.log(jqXHR);
                         })
-
                 })
-
 
             $('#updateModal').modal('show');
         })
@@ -454,7 +451,6 @@
         apartmentTypeDTO.name =$('#apt-typeUp option:selected').text()
         apartmentTypeDTO.id = $('#apt-typeUp').val();
         apartment.apartmentTypeDTO = apartmentTypeDTO;
-
 
         apartment.title = $('#apt-titleUp').val();
         apartment.price = $('#apt-priceUp').val();
@@ -538,20 +534,9 @@
                         }
                     }
                 }
-
                 $('#formUpdateApt .modal-alert-danger').append(str);
 
-
-                // if (jqXHR.responseJSON) {
-                //     $.each(jqXHR.responseJSON, (key, item) => {
-                //         let str = `<label id="${key}-error" class="input-error" for="${key}">${item}</label>`;
-                //         $("#" + key).addClass("input-error");
-                //
-                //         $('#formUpdateApt .modal-alert-danger').append(str);
-                //     })
-                // }
             })
-
     })
 
 //    ================================== DELETE ============================================
@@ -566,7 +551,6 @@
                          doDelete(id)
                      }
                  })
-
          })
      }
 
@@ -596,9 +580,7 @@
                      }
                  }
              });
-
      }
-
 
 </script>
 </body>

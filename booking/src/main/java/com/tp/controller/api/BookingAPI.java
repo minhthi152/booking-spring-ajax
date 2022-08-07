@@ -40,7 +40,7 @@ public class BookingAPI {
 
     @GetMapping
     public ResponseEntity<?> getAllBooking(){
-        List<BookingDTO> bookingDTOS = bookingService.findAllBookingDTO();
+        List<CreateBookingDTO> bookingDTOS = bookingService.findAllBookingDTO();
 
         if (bookingDTOS.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -48,35 +48,12 @@ public class BookingAPI {
         return new ResponseEntity<>(bookingDTOS, HttpStatus.OK);
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<?> create(@RequestBody BookingDTO bookingDTO, BindingResult bindingResult){
-//
-//
-//        bookingDTO.setId(0);
-//        try {
-//
-//            List<BookingItemDTO> bookingItemDTOList = bookingDTO.getBookingItemDTOList();
-//            List<BookingItem> bookingItemList = new ArrayList<>();
-//
-//            for (BookingItemDTO bookingItemDTO: bookingItemDTOList) {
-//                bookingItemList.add(bookingItemDTO.toBookingItem());
-//            }
-//
-//            Booking createdBooking = bookingService.create(bookingDTO.toBooking(bookingItemList));
-//
-//            bookingDTO = createdBooking.toBookingDTO(bookingItemDTOList);
-//
-//            return new ResponseEntity<>(bookingDTO, HttpStatus.CREATED);
-//
-//        } catch (DataIntegrityViolationException e) {
-//            throw new DataInputException("Booking creation information is not valid, please check the information again");
-//        }
-//
-//    }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody CreateBookingDTO bookingDTO, BindingResult bindingResult){
-
+    public ResponseEntity<?> create(@Valid @RequestBody CreateBookingDTO bookingDTO, BindingResult bindingResult){
+        if (bindingResult.hasFieldErrors()){
+            return appUtil.mapErrorToResponse(bindingResult);
+        }
         bookingDTO.setId(0L);
 
         try {
@@ -98,7 +75,10 @@ public class BookingAPI {
                 bookingItemService.save(bookingItem);
             }
 
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            bookingDTO.setId(bookingDTONew.getId());
+
+
+            return new ResponseEntity<>(bookingDTO, HttpStatus.CREATED);
 
         } catch (DataIntegrityViolationException e) {
             throw new DataInputException("Booking creation information is not valid, please check the information again");

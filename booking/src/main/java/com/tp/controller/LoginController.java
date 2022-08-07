@@ -6,14 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("")
-public class HomeController {
+@RequestMapping("/sign-in")
+public class LoginController {
 
     @GetMapping
-    public ModelAndView showHomePage(){
+    public ModelAndView showLoginPage(){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/index");
+        modelAndView.setViewName("/login");
         return modelAndView;
     }
-
 }

@@ -103,7 +103,7 @@ class App {
         }
     }
 
-    static drawApartment(numberId) {
+    static drawModalRowBooking(numberId) {
         let str = `
             <div class="row" id="row_${numberId}">
                 <div class="col-lg-3">
@@ -114,13 +114,13 @@ class App {
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group">
-                        <input type="date" class="form-control check-in-date" data-number-id="${numberId}">
+                        <input type="date" id="check-in-date-${numberId}" class="form-control check-in-date" data-number-id="${numberId}">
                     </div>
                 </div>
 
                 <div class="col-lg-4">
                     <div class="form-group">
-                        <input type="date" class="form-control check-out-date" data-number-id="${numberId}">
+                        <input type="date" id="check-out-date-${numberId}" class="form-control check-out-date" data-number-id="${numberId}">
                     </div>
                 </div>
                 <div class="col-lg-1">
@@ -133,6 +133,61 @@ class App {
             </div>
         `;
 
+        return str;
+    }
+
+    static drawRowBooking(id, tenantName, tenantEmail,tenantPhone){
+        let str = `
+            <tr>
+                <td>
+                    <span class="select-tab unselected"></span>
+                </td>
+                <td>${id}</td>
+                <td>${tenantName}</td>
+                <td>${tenantEmail}</td>
+                <td>${tenantPhone}</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                        View Details
+                    </button>
+                </td>
+            </tr>
+        `;
+        return str;
+    }
+
+    static drawBookingItemPrice(apartmentTitle,duration,price){
+        let str = `
+            <tr>
+                <th scope="row">
+                    <div>
+                        <h5 class="text-truncate font-size-14">${apartmentTitle}</h5>
+                    </div>
+                </th>
+                <td>
+                    <div>
+                        <h5 class="text-truncate font-size-14">${duration}</h5>
+                    </div>
+                </td>
+                <td>$ ${price}</td>
+            </tr>        
+        `;
+        return str;
+    }
+
+    static drawBookingSum(sum){
+        let str = `
+            <tr>
+                <td colspan="2">
+                    <h6 class="m-0 text-right">Total:</h6>
+                </td>
+                <td>
+                    $ ${sum}
+                </td>
+            </tr>
+
+        `;
         return str;
     }
 
