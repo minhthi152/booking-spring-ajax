@@ -388,14 +388,33 @@
         }
 
         function checkDataIsValid() {
-            let bookingItemsLength = bookingItems.length;
             let dataIsValid = true;
 
-            for (let i = 0; i < bookingItemsLength; i++) {
+            // for (let i = 0; i < bookingItems.length; i++) {
+            //     if (bookingItems[i].data != null) {
+            //         if (
+            //             bookingItems[i].data.apartment.id == null
+            //             || bookingItems[i].data.checkInDate == null
+            //             || bookingItems[i].data.checkOutDate == null
+            //         ) {
+            //             dataIsValid = false;
+            //         }
+            //     }
+            // }
+
+            let bookingItemSend = [];
+
+            for (let i = 0; i < bookingItems.length; i++) {
+                if (bookingItems[i].data != null) {
+                    bookingItemSend.push(bookingItems[i].data);
+                }
+            }
+
+            for (let i = 0; i < bookingItemSend.length; i++) {
                 if (
-                    bookingItems[i].data.apartment.id == null
-                    || bookingItems[i].data.checkInDate == null
-                    || bookingItems[i].data.checkOutDate == null
+                    bookingItemSend[i].apartment.id == null
+                    || bookingItemSend[i].checkInDate == null
+                    || bookingItemSend[i].checkOutDate == null
                 ) {
                     dataIsValid = false;
                 }
@@ -428,7 +447,6 @@
                     let str = App.drawBookingItemPrice(apartmentObj.title, getDuration(item.data.checkInDate, item.data.checkOutDate), apartmentObj.price);
                     $('#booking-calculate tbody').prepend(str);
                     sum += apartmentObj.price * getDuration(item.data.checkInDate, item.data.checkOutDate);
-
                 });
                 console.log(sum);
 
