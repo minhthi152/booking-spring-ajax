@@ -162,6 +162,8 @@
 
         let booking = {};
 
+        let bookingItemSend = [];
+
         function getToday(day) {
             let today = new Date();
             let dd = String(today.getDate() + day).padStart(2, '0');
@@ -247,6 +249,7 @@
         }
 
         $('#btn-add-booking').on('click', () => {
+            numberId = 0;
             $('#row-booking-item').html('');
             $('#booking-calculate tbody').empty();
             $('#formCreateBooking .modal-alert-danger').html('').removeClass('show').addClass('hide');
@@ -267,9 +270,6 @@
             let str = App.drawModalRowBooking(numberId);
             $('#row-booking-item').append(str);
 
-            // let str1 = App.drawBookingItemPrice($('#list_apartment_' + numberId).val(),$("#check-in-date-").val("") - $("#check-out-date-").val(""), 1000 );
-            // $('#booking-calculate').prepend(str1);
-
             $("#check-in-date-" + numberId).val(getToday(0));
             $("#check-out-date-" + numberId).val(getToday(1));
 
@@ -277,7 +277,8 @@
             bookingItem.id = numberId;
             bookingItem.data.checkInDate = getToday(0);
             bookingItem.data.checkOutDate = getToday(1);
-            bookingItem.data.apartment.id = null;
+            // bookingItem.data.apartment.id = null;
+            bookingItem.data.apartment.id = apartments[0].id;
             bookingItems.push(bookingItem);
 
             drawListApartments(numberId);
@@ -401,9 +402,7 @@
             //         }
             //     }
             // }
-
-            let bookingItemSend = [];
-
+            bookingItemSend = [];
             for (let i = 0; i < bookingItems.length; i++) {
                 if (bookingItems[i].data != null) {
                     bookingItemSend.push(bookingItems[i].data);
@@ -440,13 +439,13 @@
                 $('#booking-calculate tbody tr:last').remove();
                 let sum = 0;
 
-                $.each(bookingItems, (i, item) => {
-                    let apartmentId = item.data.apartment.id;
+                $.each(bookingItemSend, (i, item) => {
+                    let apartmentId = item.apartment.id;
                     let apartmentObj = getApartmentData(apartmentId);
 
-                    let str = App.drawBookingItemPrice(apartmentObj.title, getDuration(item.data.checkInDate, item.data.checkOutDate), apartmentObj.price);
+                    let str = App.drawBookingItemPrice(apartmentObj.title, getDuration(item.checkInDate, item.checkOutDate), apartmentObj.price);
                     $('#booking-calculate tbody').prepend(str);
-                    sum += apartmentObj.price * getDuration(item.data.checkInDate, item.data.checkOutDate);
+                    sum += apartmentObj.price * getDuration(item.checkInDate, item.checkOutDate);
                 });
                 console.log(sum);
 
@@ -464,7 +463,7 @@
             booking.tenantEmail = $("#tenant-email").val();
             booking.tenantPhone = $("#tenant-phone").val();
 
-            let bookingItemSend = [];
+            bookingItemSend = [];
 
             for (let i = 0; i < bookingItems.length; i++) {
                 if (bookingItems[i].data != null) {
@@ -497,16 +496,20 @@
                     $('#booking-calculate tbody').empty();
 
                     bookingItems.splice(0, bookingItems.length);
-                    bookingItems.push({
-                        id: 0,
-                        data: {
-                            checkInDate: null,
-                            checkOutDate: null,
-                            apartment: {
-                                id: null
-                            }
-                        }
-                    });
+                    // bookingItems.push({
+                    //     id: 0,
+                    //     data: {
+                    //         checkInDate: null,
+                    //         checkOutDate: null,
+                    //         apartment: {
+                    //             id: null
+                    //         }
+                    //     }
+                    // });
+
+                    bookingItem = tempBookingItem();
+                    bookingItems.push(bookingItem);
+
 
                     $('#createBookingModal').modal('hide');
                     App.IziToast.showSuccessAlert("Booking success");
@@ -571,9 +574,7 @@
 
         }
 
-
     //    =============== disable past date for input ===============
-
 
 
         function handleMinCheckInDate(rowId) {
